@@ -316,6 +316,8 @@ set(JBINDING_JAVAH_H_FILES
         ${JBINDING_SRC}/javah/net_sf_sevenzipjbinding_SevenZip.h
         )
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
 add_definitions(
         -fmessage-length=0
         -O2
