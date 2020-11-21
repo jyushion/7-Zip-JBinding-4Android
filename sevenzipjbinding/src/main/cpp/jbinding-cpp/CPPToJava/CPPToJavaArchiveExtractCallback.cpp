@@ -76,6 +76,7 @@ STDMETHODIMP CPPToJavaArchiveExtractCallback::GetStream(UInt32 index,
     // public SequentialOutStream getStream(int index, ExtractAskMode extractAskMode);
     jobject result = _iArchiveExtractCallback->getStream(jniEnvInstance, _javaImplementation,
             (jint) index, askExtractModeObject);
+    jniEnvInstance -> DeleteLocalRef(askExtractModeObject);
     if (jniEnvInstance.exceptionCheck()) {
         return S_FALSE;
     }
@@ -87,6 +88,7 @@ STDMETHODIMP CPPToJavaArchiveExtractCallback::GetStream(UInt32 index,
 
     CMyComPtr<ISequentialOutStream> outStreamComPtr = new CPPToJavaSequentialOutStream(
             _jbindingSession, jniEnvInstance, result);
+    jniEnvInstance -> DeleteLocalRef(result);
     *outStream = outStreamComPtr.Detach();
 
     return S_OK;
@@ -106,6 +108,7 @@ STDMETHODIMP CPPToJavaArchiveExtractCallback::PrepareOperation(Int32 askExtractM
     // public void prepareOperation(ExtractAskMode extractAskMode);
     _iArchiveExtractCallback->prepareOperation(jniEnvInstance, _javaImplementation,
             askExtractModeObject);
+    jniEnvInstance -> DeleteLocalRef(askExtractModeObject);
 
     return jniEnvInstance.exceptionCheck() ? S_FALSE : S_OK;
 }
@@ -125,6 +128,7 @@ STDMETHODIMP CPPToJavaArchiveExtractCallback::SetOperationResult(Int32 resultEOp
     // public void setOperationResult(ExtractOperationResult extractOperationResult);
     _iArchiveExtractCallback->setOperationResult(jniEnvInstance, _javaImplementation,
             resultEOperationResultObject);
+    jniEnvInstance -> DeleteLocalRef(resultEOperationResultObject);
 
     return jniEnvInstance.exceptionCheck() ? S_FALSE : S_OK;
 }

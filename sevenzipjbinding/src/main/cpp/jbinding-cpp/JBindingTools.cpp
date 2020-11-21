@@ -120,7 +120,10 @@ jclass findClass(JNIEnv* env, const char* name) {
     if (env->ExceptionCheck()) {
         env->ExceptionClear();
     }
-    return static_cast<jclass>(env->CallObjectMethod(JBindingSession::_classLoaderObjects.at(name), JBindingSession::_classLoaderID, env->NewStringUTF(name)));
+    jstring className = env->NewStringUTF(name);
+    jclass javaClass = static_cast<jclass>(env->CallObjectMethod(JBindingSession::_classLoaderObjects.at(name), JBindingSession::_classLoaderID, className));
+    env -> DeleteLocalRef(className);
+    return javaClass;
 }
 #endif
 
@@ -235,6 +238,7 @@ JNINativeCallContext::~JNINativeCallContext() {
             }
             sevenZipException = static_cast<jthrowable> (jni::SevenZipException::newInstance(
                     _jniCallOriginalEnv, message));
+            _jniCallOriginalEnv -> DeleteLocalRef(message);
             assertNoExceptionOnJniCallOriginalEnv();
 
             if (_firstThrownException) {
@@ -259,6 +263,7 @@ JNINativeCallContext::~JNINativeCallContext() {
                 assertNoExceptionOnJniCallOriginalEnv();
             }
             _jniCallOriginalEnv->Throw(sevenZipException);
+            _jniCallOriginalEnv -> DeleteLocalRef(sevenZipException);
         }
     }
 

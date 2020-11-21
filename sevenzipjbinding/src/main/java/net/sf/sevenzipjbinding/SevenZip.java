@@ -225,6 +225,15 @@ public class SevenZip {
     private static String usedPlatform = null;
     private static File[] temporaryArtifacts = null;
 
+    static {
+        try {
+            System.loadLibrary("7-Zip-JBinding");
+            nativeInitSevenZipLibrary();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Hide default constructor
      */
@@ -768,7 +777,7 @@ public class SevenZip {
      */
     public static IInArchive openInArchive(ArchiveFormat archiveFormat, IInStream inStream,
             IArchiveOpenCallback archiveOpenCallback) throws SevenZipException {
-        ensureLibraryIsInitialized();
+        //ensureLibraryIsInitialized();
         IArchiveOpenCallback openArchiveCallbackToUse = archiveOpenCallback;
         if (openArchiveCallbackToUse == null) {
             // TODO Test this!
@@ -805,7 +814,7 @@ public class SevenZip {
      */
     public static IInArchive openInArchive(ArchiveFormat archiveFormat, IInStream inStream, String passwordForOpen)
             throws SevenZipException {
-        ensureLibraryIsInitialized();
+        //ensureLibraryIsInitialized();
         if (passwordForOpen == null) {
             return openInArchive(archiveFormat, inStream);
         }
@@ -832,7 +841,7 @@ public class SevenZip {
      * @see #openInArchive(ArchiveFormat, IInStream, String)
      */
     public static IInArchive openInArchive(ArchiveFormat archiveFormat, IInStream inStream) throws SevenZipException {
-        ensureLibraryIsInitialized();
+        //ensureLibraryIsInitialized();
         return callNativeOpenArchive(archiveFormat, inStream, new DummyOpenArchiveCallback());
     }
 
@@ -972,7 +981,7 @@ public class SevenZip {
      * @return Version
      */
     public static Version getSevenZipVersion() {
-        ensureLibraryIsInitialized();
+        //ensureLibraryIsInitialized();
 
         Version version = new Version();
 
@@ -1078,7 +1087,7 @@ public class SevenZip {
     }
 
     private static OutArchiveImpl<?> openOutArchiveIntern(ArchiveFormat archiveFormat) throws SevenZipException {
-        ensureLibraryIsInitialized();
+        //ensureLibraryIsInitialized();
         if (!archiveFormat.isOutArchiveSupported()) {
             throw new IllegalStateException("Archive format '" + archiveFormat + "' doesn't support archive creation.");
         }
